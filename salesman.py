@@ -8,6 +8,19 @@ class City:
 def calculate_distance(loc1, loc2):
     return ((loc1[0] - loc2[0]) ** 2 + (loc1[1] - loc2[1]) ** 2) ** 0.5
 
+def find_nearest_city(current_city, cities):
+    nearest_city = None
+    min_distance = float('inf')
+    for city in cities:
+        if not city.visited:
+            distance = calculate_distance(current_city.pos, city.pos)
+            if distance < min_distance:
+                min_distance = distance
+                nearest_city = city
+    if nearest_city is None:
+        return True
+    return nearest_city
+
 def run():
     pygame.init()
     screen = pygame.display.set_mode((1024, 1024))
@@ -35,4 +48,16 @@ def run():
             screen.fill((0, 0, 0))
             for city in cities:
                 pygame.draw.circle(screen, (0, 255, 0), city.pos, 5)
-            #TODO implement the TSP algorithm here
+            #nearest neightbour algorithm
+            if len(cities) > 0:
+                current_city = cities[0]
+                complete = False
+                while not complete:
+                    current_city.visited = True
+                    next_city = find_nearest_city(current_city, cities)
+                    if next_city == True:
+                        complete = True
+                    else:
+                        pygame.draw.line(screen, (255, 0, 0), current_city.pos, next_city.pos, 2)
+                        current_city = next_city
+                    pygame.display.flip()
