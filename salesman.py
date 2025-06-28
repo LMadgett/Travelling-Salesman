@@ -22,8 +22,8 @@ def find_nearest_city(current_city, cities):
 
 def run():
     pygame.init()
-    x_size = 800
-    y_size = 800
+    x_size = 1024
+    y_size = 1024
     screen = pygame.display.set_mode((x_size, y_size))
     pygame.display.set_caption("Travelling Salesman Problem Visualization")
     running = True
