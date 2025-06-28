@@ -18,9 +18,7 @@ def find_nearest_city(current_city, cities):
             if distance < min_distance:
                 min_distance = distance
                 nearest_city = city
-    if nearest_city is None:
-        return True
-    return nearest_city
+    return (nearest_city, min_distance)
 
 def run():
     pygame.init()
@@ -56,14 +54,20 @@ def run():
             if len(cities) > 0:
                 current_city = cities[random.randint(0, len(cities) - 1)]
                 complete = False
+                total_distance = 0
                 while not complete:
                     current_city.visited = True
-                    next_city = find_nearest_city(current_city, cities)
-                    if next_city == True:
+                    (next_city, distance) = find_nearest_city(current_city, cities)
+                    if distance != float('inf'):
+                        total_distance += distance
+                    if next_city == None:
                         complete = True
                         optimising = False
                         for city in cities:
                             city.visited = False
+                        font = pygame.font.SysFont(None, 36)
+                        text = font.render(f"Total Distance: {total_distance:.2f}", True, (255, 255, 255))
+                        screen.blit(text, (10, 10))
                     else:
                         pygame.draw.line(screen, (255, 0, 0), current_city.pos, next_city.pos, 2)
                         current_city = next_city
