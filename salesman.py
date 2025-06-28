@@ -65,11 +65,12 @@ def run():
                         if next_city is None:
                             complete = True
                             optimising = False
-                            for city in cities:
-                                city.visited = False
+                            for c in cities:
+                                c.visited = False
                             if total_distance < min_distance:
                                 min_distance = total_distance
                                 best_route = route
+                            #print(f"starting at city {cities.index(city)} with distance {total_distance}")
                         else:
                             pygame.draw.line(screen, (255, 0, 0), current_city.pos, next_city.pos, 2)
                             current_city = next_city
