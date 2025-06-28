@@ -47,6 +47,11 @@ def run():
                 if event.key == pygame.K_SPACE:
                     optimising = True
                     drawn = False
+                if event.key == pygame.K_r:
+                    cities = []
+                    optimising = False
+                    screen.fill((0, 0, 0))
+                    pygame.display.flip()
         if optimising:
             #nearest neightbour algorithm
             if len(cities) > 0:
