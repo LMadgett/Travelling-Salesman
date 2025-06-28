@@ -46,31 +46,45 @@ def run():
             elif event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_SPACE:
                     optimising = True
+                    drawn = False
         if optimising:
-            screen.fill((0, 0, 0))
-            for city in cities:
-                pygame.draw.circle(screen, (0, 255, 0), city.pos, 5)
             #nearest neightbour algorithm
             if len(cities) > 0:
-                current_city = cities[random.randint(0, len(cities) - 1)]
-                complete = False
-                total_distance = 0
-                while not complete:
-                    current_city.visited = True
-                    (next_city, distance) = find_nearest_city(current_city, cities)
-                    if distance != float('inf'):
-                        total_distance += distance
-                    if next_city == None:
-                        complete = True
-                        optimising = False
-                        for city in cities:
-                            city.visited = False
-                        font = pygame.font.SysFont(None, 36)
-                        text = font.render(f"Total Distance: {total_distance:.2f}", True, (255, 255, 255))
-                        screen.blit(text, (10, 10))
-                    else:
-                        pygame.draw.line(screen, (255, 0, 0), current_city.pos, next_city.pos, 2)
-                        current_city = next_city
+                min_distance = float('inf')
+                for city in cities:
+                    current_city = city
+                    complete = False
+                    total_distance = 0
+                    route = []
+                    while not complete:
+                        current_city.visited = True
+                        route.append(current_city)
+                        (next_city, distance) = find_nearest_city(current_city, cities)
+                        if distance != float('inf'):
+                            total_distance += distance
+                        if next_city is None:
+                            complete = True
+                            optimising = False
+                            for city in cities:
+                                city.visited = False
+                            if total_distance < min_distance:
+                                min_distance = total_distance
+                                best_route = route
+                        else:
+                            pygame.draw.line(screen, (255, 0, 0), current_city.pos, next_city.pos, 2)
+                            current_city = next_city
+                
+                if not drawn:
+                    screen.fill((0, 0, 0))
+                    for city in cities:
+                        pygame.draw.circle(screen, (0, 255, 0), city.pos, 5)
+                    for i in range(len(best_route)):
+                        if i < len(best_route) - 1:
+                            pygame.draw.line(screen, (255, 0, 0), best_route[i].pos, best_route[i + 1].pos, 2)
+                    font = pygame.font.SysFont(None, 36)
+                    text = font.render(f"Total Distance: {min_distance:.2f}", True, (255, 255, 255))
+                    screen.blit(text, (10, 10))
                     pygame.display.flip()
+                    drawn = True
 
 run()
