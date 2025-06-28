@@ -1,4 +1,5 @@
 import pygame
+import random
 
 class City:
     def __init__(self, pos):
@@ -23,7 +24,9 @@ def find_nearest_city(current_city, cities):
 
 def run():
     pygame.init()
-    screen = pygame.display.set_mode((1024, 1024))
+    x_size = 800
+    y_size = 800
+    screen = pygame.display.set_mode((x_size, y_size))
     pygame.display.set_caption("Travelling Salesman Problem Visualization")
     running = True
     optimising = False
@@ -41,6 +44,7 @@ def run():
                         city = City(pos)
                         cities.append(city)
                         pygame.draw.circle(screen, (0, 255, 0), pos, 5)
+                        pygame.display.flip()
             elif event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_SPACE:
                     optimising = True
@@ -50,14 +54,19 @@ def run():
                 pygame.draw.circle(screen, (0, 255, 0), city.pos, 5)
             #nearest neightbour algorithm
             if len(cities) > 0:
-                current_city = cities[0]
+                current_city = cities[random.randint(0, len(cities) - 1)]
                 complete = False
                 while not complete:
                     current_city.visited = True
                     next_city = find_nearest_city(current_city, cities)
                     if next_city == True:
                         complete = True
+                        optimising = False
+                        for city in cities:
+                            city.visited = False
                     else:
                         pygame.draw.line(screen, (255, 0, 0), current_city.pos, next_city.pos, 2)
                         current_city = next_city
                     pygame.display.flip()
+
+run()
